@@ -1,4 +1,4 @@
-package com.practicum.bluetoothbpr.device.domain
+package com.practicum.bluetoothbpr
 
 import java.util.ArrayDeque
 

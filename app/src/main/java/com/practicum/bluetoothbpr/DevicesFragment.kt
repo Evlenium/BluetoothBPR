@@ -1,4 +1,4 @@
-package com.practicum.bluetoothbpr.device.ui
+package com.practicum.bluetoothbpr
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -22,8 +22,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.ListFragment
-import com.practicum.ble.BluetoothUtil
-import com.practicum.bluetoothbpr.R
 import java.util.*
 
 /**

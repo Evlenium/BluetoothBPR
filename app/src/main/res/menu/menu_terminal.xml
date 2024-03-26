@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/clear"
+        android:icon="@drawable/ic_delete"
+        android:title="Clear"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/newline"
+        android:title="Newline"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/hex"
+        android:checkable="true"
+        android:title="HEX Mode"
+        app:showAsAction="never" />
 </menu>

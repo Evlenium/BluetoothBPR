@@ -1,4 +1,4 @@
-package com.practicum.bluetoothbpr.device.data
+package com.practicum.bluetoothbpr
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -7,7 +7,6 @@ import android.app.Service
 import android.content.Intent
 import android.os.*
 import androidx.core.app.NotificationCompat
-import com.practicum.bluetoothbpr.device.domain.SerialListener
 import java.io.IOException
 import java.util.*
 /**
@@ -26,17 +25,17 @@ class SerialService : Service(), SerialListener {
     }
 
     private class QueueItem {
-        var type: com.practicum.bluetoothbpr.device.data.SerialService.QueueType
+        var type: QueueType
         var datas: ArrayDeque<ByteArray?>? = null
         var e: Exception? = null
 
-        internal constructor(type: com.practicum.ble.SerialService.QueueType) {
+        internal constructor(type: QueueType) {
             this.type = type
-            if (type == com.practicum.ble.SerialService.QueueType.Read) init()
+            if (type == QueueType.Read) init()
         }
 
         internal constructor(
-            type: com.practicum.ble.SerialService.QueueType,
+            type: QueueType,
             e: Exception?,
         ) {
             this.type = type
@@ -44,7 +43,7 @@ class SerialService : Service(), SerialListener {
         }
 
         internal constructor(
-            type: com.practicum.ble.SerialService.QueueType,
+            type: QueueType,
             datas: ArrayDeque<ByteArray?>?,
         ) {
             this.type = type
@@ -78,7 +77,7 @@ class SerialService : Service(), SerialListener {
         queue1 = ArrayDeque()
         queue2 = ArrayDeque()
         lastRead =
-            QueueItem(com.practicum.ble.SerialService.QueueType.Read)
+            QueueItem(QueueType.Read)
     }
 
     override fun onDestroy() {
@@ -124,28 +123,28 @@ class SerialService : Service(), SerialListener {
         synchronized(this) { this.listener = listener }
         for (item in queue1) {
             when (item.type) {
-                com.practicum.ble.SerialService.QueueType.Connect -> listener.onSerialConnect()
-                com.practicum.ble.SerialService.QueueType.ConnectError -> listener.onSerialConnectError(
+                QueueType.Connect -> listener.onSerialConnect()
+                QueueType.ConnectError -> listener.onSerialConnectError(
                     item.e
                 )
-                com.practicum.ble.SerialService.QueueType.Read -> listener.onSerialRead(
+                QueueType.Read -> listener.onSerialRead(
                     item.datas
                 )
-                com.practicum.ble.SerialService.QueueType.IoError -> listener.onSerialIoError(
+                QueueType.IoError -> listener.onSerialIoError(
                     item.e
                 )
             }
         }
         for (item in queue2) {
             when (item.type) {
-                com.practicum.ble.SerialService.QueueType.Connect -> listener.onSerialConnect()
-                com.practicum.ble.SerialService.QueueType.ConnectError -> listener.onSerialConnectError(
+                QueueType.Connect -> listener.onSerialConnect()
+                QueueType.ConnectError -> listener.onSerialConnectError(
                     item.e
                 )
-                com.practicum.ble.SerialService.QueueType.Read -> listener.onSerialRead(
+                QueueType.Read -> listener.onSerialRead(
                     item.datas
                 )
-                com.practicum.ble.SerialService.QueueType.IoError -> listener.onSerialIoError(
+                QueueType.IoError -> listener.onSerialIoError(
                     item.e
                 )
             }
@@ -185,7 +184,7 @@ class SerialService : Service(), SerialListener {
         val restartPendingIntent = PendingIntent.getActivity(this, 1, restartIntent, flags)
         val builder: NotificationCompat.Builder =
             NotificationCompat.Builder(this, Constants.NOTIFICATION_CHANNEL)
-                .setSmallIcon(R.drawable.baseline_notifications_none_24)
+                .setSmallIcon(R.drawable.ic_notifications)
                 .setColor(resources.getColor(R.color.colorPrimary))
                 .setContentTitle(resources.getString(R.string.app_name))
                 .setContentText(if (socket != null) "Connected to " + socket!!.name else "Background Service")
@@ -193,7 +192,7 @@ class SerialService : Service(), SerialListener {
                 .setOngoing(true)
                 .addAction(
                     NotificationCompat.Action(
-                        R.drawable.baseline_clear_24,
+                        R.drawable.ic_delete,
                         "Disconnect",
                         disconnectPendingIntent
                     )
@@ -219,11 +218,11 @@ class SerialService : Service(), SerialListener {
                         if (listener != null) {
                             listener!!.onSerialConnect()
                         } else {
-                            queue1.add(QueueItem(com.practicum.ble.SerialService.QueueType.Connect))
+                            queue1.add(QueueItem(QueueType.Connect))
                         }
                     }
                 } else {
-                    queue2.add(QueueItem(com.practicum.ble.SerialService.QueueType.Connect))
+                    queue2.add(QueueItem(QueueType.Connect))
                 }
             }
         }
@@ -239,7 +238,7 @@ class SerialService : Service(), SerialListener {
                         } else {
                             queue1.add(
                                 QueueItem(
-                                    com.practicum.ble.SerialService.QueueType.ConnectError,
+                                    QueueType.ConnectError,
                                     e
                                 )
                             )
@@ -249,7 +248,7 @@ class SerialService : Service(), SerialListener {
                 } else {
                     queue2.add(
                         QueueItem(
-                            com.practicum.ble.SerialService.QueueType.ConnectError,
+                            QueueType.ConnectError,
                             e
                         )
                     )
@@ -292,7 +291,7 @@ class SerialService : Service(), SerialListener {
                             } else {
                                 queue1.add(
                                     QueueItem(
-                                        com.practicum.ble.SerialService.QueueType.Read,
+                                        QueueType.Read,
                                         datas
                                     )
                                 )
@@ -300,8 +299,8 @@ class SerialService : Service(), SerialListener {
                         }
                     }
                 } else {
-                    if (queue2.isEmpty() || queue2.last.type != com.practicum.ble.SerialService.QueueType.Read) queue2.add(
-                        QueueItem(com.practicum.ble.SerialService.QueueType.Read)
+                    if (queue2.isEmpty() || queue2.last.type != QueueType.Read) queue2.add(
+                        QueueItem(QueueType.Read)
                     )
                     queue2.last.add(data)
                 }
@@ -319,7 +318,7 @@ class SerialService : Service(), SerialListener {
                         } else {
                             queue1.add(
                                 QueueItem(
-                                    com.practicum.ble.SerialService.QueueType.IoError,
+                                    QueueType.IoError,
                                     e
                                 )
                             )
@@ -329,7 +328,7 @@ class SerialService : Service(), SerialListener {
                 } else {
                     queue2.add(
                         QueueItem(
-                            com.practicum.ble.SerialService.QueueType.IoError,
+                            QueueType.IoError,
                             e
                         )
                     )

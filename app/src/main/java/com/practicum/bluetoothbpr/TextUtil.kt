@@ -1,4 +1,4 @@
-package com.practicum.bluetoothbpr.device
+package com.practicum.bluetoothbpr
 
 import android.text.*
 import android.text.style.BackgroundColorSpan

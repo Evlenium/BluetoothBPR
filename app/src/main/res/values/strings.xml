@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">BluetoothBPR</string>
+    <string name="devices">Устройства Bluetooth</string>
+    <string name="ok">OK</string>
+
+    <string name="bluetooth_permission_title">Разрешение Bluetooth</string>
+    <string name="bluetooth_permission_grant">Для этого приложения требуется разрешение Bluetooth. Пожалуйста, предоставьте разрешение в следующем диалоге.</string>
+    <string name="bluetooth_permission_denied">Разрешение Bluetooth было окончательно отклонено. Вам необходимо включить разрешение \"%s\" в настройках приложения.</string>
+
+    <string name="location_permission_title">Разрешение местоположения</string>
+    <string name="location_permission_grant">Это приложение не использует информацию о местоположении, но для сканирования устройств Bluetooth LE требуется это разрешение. Пожалуйста, предоставьте разрешение в следующем диалоге.</string>
+    <string name="location_permission_denied">Поскольку разрешение на определение местоположения не предоставлено, это приложение не может выполнять поиск устройств Bluetooth LE.</string>
+
+    <string name="pairing_request">Запрошено СОПРЯЖЕНИЕ\n->Выполните действия по сопряжению. Подключитесь снова</string>
 </resources>

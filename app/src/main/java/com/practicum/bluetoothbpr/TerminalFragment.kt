@@ -1,4 +1,4 @@
-package com.practicum.bluetoothbpr.device.ui
+package com.practicum.bluetoothbpr
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -14,10 +14,6 @@ import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.practicum.bluetoothbpr.R
-import com.practicum.bluetoothbpr.device.TextUtil
-import com.practicum.bluetoothbpr.device.data.SerialService
-import com.practicum.bluetoothbpr.device.domain.SerialListener
 
 import java.util.*
 
@@ -32,8 +28,8 @@ class TerminalFragment : Fragment(), ServiceConnection,
     private var receiveText: TextView? = null
     private var sendText: TextView? = null
     private var hexWatcher: TextUtil.HexWatcher? = null
-    private var connected: com.practicum.bluetoothbpr.device.ui.TerminalFragment.Connected =
-        com.practicum.bluetoothbpr.device.ui.TerminalFragment.Connected.False
+    private var connected: Connected =
+        Connected.False
     private var initialStart = true
     private var hexEnabled = false
     private var pendingNewline = false
@@ -50,7 +46,7 @@ class TerminalFragment : Fragment(), ServiceConnection,
     }
 
     override fun onDestroy() {
-        if (connected != com.practicum.bluetoothbpr.device.ui.TerminalFragment.Connected.False) disconnect()
+        if (connected != Connected.False) disconnect()
         requireActivity().stopService(Intent(activity, SerialService::class.java))
         super.onDestroy()
     }
@@ -180,7 +176,7 @@ class TerminalFragment : Fragment(), ServiceConnection,
             val device = bluetoothAdapter.getRemoteDevice(deviceAddress)
             status("connecting...")
             connected =
-                com.practicum.bluetoothbpr.device.ui.TerminalFragment.Connected.Pending
+                Connected.Pending
             val socket = SerialSocket(requireActivity().applicationContext, device)
             service!!.connect(socket)
         } catch (e: Exception) {
@@ -189,12 +185,12 @@ class TerminalFragment : Fragment(), ServiceConnection,
     }
 
     private fun disconnect() {
-        connected = com.practicum.ble.TerminalFragment.Connected.False
+        connected = Connected.False
         service!!.disconnect()
     }
 
     private fun send(str: String) {
-        if (connected != com.practicum.ble.TerminalFragment.Connected.True) {
+        if (connected != Connected.True) {
             Toast.makeText(activity, "not connected", Toast.LENGTH_SHORT).show()
             return
         }
@@ -287,7 +283,7 @@ class TerminalFragment : Fragment(), ServiceConnection,
 
     override fun onSerialConnect() {
         status("connected")
-        connected = com.practicum.ble.TerminalFragment.Connected.True
+        connected = Connected.True
     }
 
     override fun onSerialConnectError(e: Exception?) {

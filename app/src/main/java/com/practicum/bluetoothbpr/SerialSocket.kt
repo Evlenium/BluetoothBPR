@@ -1,4 +1,4 @@
-package com.practicum.bluetoothbpr.device.data
+package com.practicum.bluetoothbpr
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -10,8 +10,6 @@ import android.content.IntentFilter
 import android.os.Build
 import android.provider.SyncStateContract
 import android.util.Log
-import com.practicum.bluetoothbpr.R
-import com.practicum.bluetoothbpr.device.domain.SerialListener
 import java.io.IOException
 import java.security.InvalidParameterException
 import java.util.*
@@ -161,7 +159,7 @@ class SerialSocket(context: Context, device: BluetoothDevice?) :
         this.listener = listener
         context.registerReceiver(
             disconnectBroadcastReceiver,
-            IntentFilter(SyncStateContract.Constants.INTENT_ACTION_DISCONNECT)
+            IntentFilter(Constants.INTENT_ACTION_DISCONNECT)
         )
         Log.d(TAG, "connect $device")
         context.registerReceiver(pairingBroadcastReceiver, pairingIntentFilter)
@@ -187,6 +185,7 @@ class SerialSocket(context: Context, device: BluetoothDevice?) :
                 Log.d(TAG, "pairing request $pairingVariant")
                 onSerialConnectError(IOException(context.getString(R.string.pairing_request)))
             }
+
             BluetoothDevice.ACTION_BOND_STATE_CHANGED -> {
                 val bondState = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, -1)
                 val previousBondState =
@@ -196,6 +195,7 @@ class SerialSocket(context: Context, device: BluetoothDevice?) :
                     "bond state $previousBondState->$bondState"
                 )
             }
+
             else -> Log.d(TAG, "unknown broadcast " + intent.action)
         }
     }

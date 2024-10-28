@@ -1,4 +1,4 @@
-package com.practicum.ble
+package com.practicum.bluetoothbpr
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -12,7 +12,6 @@ import android.os.Build
 import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
-import com.practicum.bluetoothbpr.R
 import kotlin.reflect.KFunction0
 
 object BluetoothUtil {
